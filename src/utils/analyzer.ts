@@ -32,6 +32,9 @@ export interface AnalysisResult {
   error?: string;
 }
 
+const apiBaseUrl = (import.meta.env.VITE_API_BASE_URL || '').trim().replace(/\/$/, '');
+const analyzeEndpoint = apiBaseUrl ? `${apiBaseUrl}/api/analyze` : '/api/analyze';
+
 // ============================================================
 // API Client — calls the Express backend
 // ============================================================
@@ -52,7 +55,7 @@ export async function analyzeUrl(urlInput: string): Promise<AnalysisResult> {
     };
   }
 
-  const resp = await fetch('/api/analyze', {
+  const resp = await fetch(analyzeEndpoint, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ url: trimmed }),

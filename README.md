@@ -180,6 +180,34 @@ Analyze a URL and return a trust score with detailed check results.
 
 ---
 
+## GitHub Pages Deployment
+
+This repository is configured to auto-deploy the frontend to GitHub Pages on every push to `main` using [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml).
+
+### Important
+
+- GitHub Pages hosts only the frontend static site.
+- The Express API in `server/` must be deployed separately (Render, Railway, VPS, etc.).
+
+### Steps
+
+1. Push this repo to GitHub and keep the default branch as `main`.
+2. In GitHub, open **Settings → Pages** and set **Build and deployment Source** to **GitHub Actions**.
+3. Deploy your backend and copy its public base URL (example: `https://trustlens-api.onrender.com`).
+4. In GitHub, open **Settings → Secrets and variables → Actions → Variables** and add:
+  - `VITE_API_BASE_URL` = your backend URL (no trailing slash)
+5. Configure your backend CORS to include your GitHub Pages origin:
+  - `https://<your-username>.github.io`
+  - or `https://<your-username>.github.io/<repo-name>` if you lock by full origin/path policy in your platform
+6. Push to `main`; the workflow will build and publish from `dist`.
+
+### Local vs Production API Target
+
+- Local development: frontend uses `/api` via Vite proxy (`http://localhost:3001`).
+- GitHub Pages: frontend uses `VITE_API_BASE_URL` from GitHub Actions variables.
+
+---
+
 ## How It Works
 
 1. **URL Parsing** — Normalizes and validates the input URL
